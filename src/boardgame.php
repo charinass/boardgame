@@ -26,7 +26,7 @@
 <body>
     <?php
         require_once 'C:\wamp64\www\test\control.php';
-        const ROWCOL = 5;
+        const ROWCOL = 4;
         $board = new boardGame(ROWCOL, ROWCOL);
         $prime = new getPrimeNumber();
 
@@ -52,11 +52,17 @@
         </table>
     </div>
     <div style="margin: 20px;">
-        <?php $board->calcColors(); ?> is top color.
+        <?php
+            $blue = $yellow = $red = 0;
+            
+            $board->colorCounter(0,0,$blue,$yellow,$red);
+            echo "B {$blue} , Y {$yellow} , R {$red}";
+        ?>
     </div>
 
     <h2 class="exer_heading">PRIME NUMBER EXERCISE</h2>
     <div style="margin: 20px; border: 1px solid #eee; padding: 10px; width: 400px;">
+    The first 15 prime numbers are:
     <?php
         $prime->primeNumbers();
     ?>

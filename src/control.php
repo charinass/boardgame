@@ -31,6 +31,86 @@
             return $this->arrRowCol;
         }
 
+        public function checkColor()
+        {
+            $blue = $yellow = $red = 0; 
+            $r=0; $c=0;
+            $arrNewStored = array();
+            $Condition = (($this->arrRowCol[$r][$c]) && (($this->arrRowCol[$r][$c+1]) || ($this->arrRowCol[$r][$c-1]) || ($this->arrRowCol[$r-1][$c])));
+
+            for ( ; $r < $this->intRow ; $r++)
+            {
+                for ( ; $c < $this->intRow ; $c++)
+                {
+                    if ($Condition == "blue") {
+                        $blue++;
+                        //store in a new array
+                    }
+
+                    if ($Condition == "yellow") {
+                        $yellow++;
+                    }
+                    
+                    if ($Condition == "red") {
+                        $red++;
+                    }
+                }
+
+                
+            }
+        }
+
+        public function chooseColor()
+        {
+            
+            $Color0 = $this->arrRowCol[0][0];
+            $Color1 = '';
+
+            for ($r = 0 ; $r < $this->intRow ; $r++)
+            {
+                for ($c = 0 ; $c < $this->intCol ; $c++)
+                {
+                    if (($this->arrRowCol[$r][$c] != $Color0) && ($Color1 == '')) {
+                        $Color1 = $this->arrRowCol[$r][$c];
+                    } elseif (($this->arrRowCol[$r][$c] != $Color1) && ($this->arrRowCol[$r][$c] != $Color0)) {
+                        $Color2 = $this->arrRowCol[$r][$c];
+                        break 2;
+                    }
+                }
+            }
+
+            echo "$Color0 // $Color1 // $Color2";
+            $blue = $yellow = $red = 0;
+            $retVal = $this->countColors($Color1,0,0,$blue,$yellow,$red);
+
+        }
+
+        public function colorCounter($y,$x,&$blue,&$yellow,&$red)
+        {
+            $refColor   = $this->arrRowCol[$y][$x];            
+            $this->arrRowCol[$y][$x] = "white";
+
+            if ($refColor == "blue")
+                $blue++;
+            if ($refColor == "yellow")
+                $yellow++;
+            if ($refColor == "red")
+                $red++;            
+            
+            if ((($x + 1) < 6) && ($refColor == $this->arrRowCol[$y][$x + 1])) { // right
+                $this->colorCounter($y,$x + 1,$blue,$yellow,$red);
+            } elseif ((($y + 1) < 6) && ($refColor == $this->arrRowCol[$y + 1][$x] )) { // down
+                $this->colorCounter($y + 1,$x,$blue,$yellow,$red);
+            } elseif ((($x - 1) >= 0) && ($refColor == $this->arrRowCol[$y][$x - 1])) { // left
+                $this->colorCounter($y,$x - 1,$blue,$yellow,$red);
+            } elseif ((($y - 1) >= 0) && ($refColor == $this->arrRowCol[$y - 1][$x])) { // up
+                $this->colorCounter($y - 1,$x,$blue,$yellow,$red);
+            }
+
+            $this->arrRowCol[$y][$x] = $refColor;
+
+        }
+
         public function calcColors() 
         {
             /*define("BLUE", 0);
@@ -44,10 +124,10 @@
 
             $arrColCnt = array ("blue" => 0, "yellow" => 0, "red" => 0);
 
-            for($r = 0; $r < count($this->arrRowCol); $r++) 
+            for($r=0 ; $r < $this->intRow ; $r++) 
             {
 
-                for ($c = 0; $c < count($this->arrRowCol); $c++) 
+                for ($c=0 ; $c < $this->intCol ; $c++) 
                 {
 
                     switch ($this->arrRowCol[$r][$c]) 
@@ -78,18 +158,7 @@
 
             $topColor = array_search(max($arrColCnt),$arrColCnt);
             echo "{$topColor}";
-            
-
         }
-
-
-        public function calcAlgorithm()
-        {
-            
-        }
-
-        
-
     }
 
     class getPrimeNumber 
@@ -99,12 +168,11 @@
             $counter = 0;  
             $prime_num = 2; //prime numbers starts with 2
 
-            echo "The first 15 prime numbers are: <br/>";
             while ($counter < 15) //count up to 15
             {
                 $div_counter=0;  
                 
-                for ($i=1 ; $i <= $prime_num; $i++) 
+                for ($i=1 ; $i <= $prime_num ; $i++) 
                 {
                     if (($prime_num%$i)== 0) { //if $num=4 then $num % 3 = 1   
                         $div_counter++; 
@@ -124,7 +192,7 @@
         {
             if(isset($_POST['input'])) {
                 $input = $_POST['input'];  
-                for ($i = 2; $i <= $input-1; $i++) 
+                for ($i=2 ; $i <= $input-1 ; $i++) 
                 {  
                     if ($input % $i == 0) {  
                         $value= True;  
